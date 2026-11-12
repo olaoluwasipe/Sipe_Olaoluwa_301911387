@@ -32,20 +32,29 @@ The aim is to show the database ideas in the assignment with a working, easy-to-
 
 ## Project status
 
-**Phase 1 — Repository setup:** started.
+Checked on 12 November 2026. The checklist is `Sipe_Olaoluwa_301911387_PROJECT_PLAN.md`. Each portfolio README repeats the tasks for that folder.
 
-The folders are in place. Practical work and evidence will be added as each portfolio is completed. Results will only be described as complete after they have been run and checked.
+| Portfolio | Status |
+|---|---|
+| 1. Database design | Done. Schema, seed, rendered ER diagram, write-ups, and run steps are in the folder. |
+| 2. Query optimisation | In progress. Six queries and one index experiment are done. A second experiment and saved query results are still open. |
+| 3. Transactions | Not started. |
+| 4. NoSQL | Not started. |
+| 5. Distributed databases | Not started. |
+| Final documentation | Not started. |
+
+Results are described as complete only after they have been run and checked.
 
 ## How to use this repository
 
-Each portfolio folder will contain its own work and a short README explaining:
+Each portfolio folder contains its own work and a short README explaining:
 
 1. What the task covers.
 2. What was built or tested.
 3. How to run or check it.
 4. What the results show.
 
-See the case study file for the project scope.
+See the case study file for the project scope. See the project plan for the remaining tasks.
 
 ## Submission naming
 
