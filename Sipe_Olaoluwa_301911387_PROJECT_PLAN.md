@@ -15,13 +15,13 @@ Checked on 12 November 2026.
 | 3. Transactions and concurrency | 7 | Done. A committed order, a rolled-back order, a lost update, and a row-lock run are saved. |
 | 4. NoSQL and advanced data models | 7 | Done. MongoDB holds five customer history documents. Query output is saved. |
 | 5. Distributed and cloud databases | 6 | Done. A primary and a read replica are running. The design note, replica read, and lag output are in the folder. |
-| Final documentation | 6 | Not started. The case study and this plan exist. The LMS summary does not. |
+| Final documentation | 6 | Done. The 2–3 page summary, reflection, references, and AI-use declaration are in the documentation folder. The GitHub link opens without a login. |
 
 ## Working order
 
-1. Portfolios 1 to 4 are closed. Push the local commits that are not on origin yet.
-2. Portfolio 5 is done: primary and read replica for ShopFlow.
-3. The 2–3 page LMS summary, reflection, references, and AI-use declaration.
+1. Portfolios 1 to 5 are closed.
+2. The LMS summary is in the documentation folder.
+3. Upload `Sipe_Olaoluwa_301911387_Documentation_summary.md` and the GitHub link.
 
 ## Working approach
 
@@ -39,9 +39,9 @@ Each portfolio follows the same steps:
 
 These sit outside a single portfolio and affect the whole submission.
 
-- [ ] Push the local commits that are not on origin yet. On 12 November 2026, `main` was 6 commits ahead of origin.
-- [ ] Keep committing each finished piece as it is completed, so the history is spread across the work rather than one upload at the deadline.
-- [ ] If the GitHub repository stays private, give the assessor access before the LMS submission.
+- [x] Push the documentation commit with the summary. On 12 November 2026, before that commit, `main` was even with `origin/main`.
+- [x] Each finished piece is its own commit. The summary is the last one.
+- [x] The GitHub repository is public. On 12 November 2026 the link opened without a login, so the assessor does not need an invite.
 - [x] Screenshot files renamed with the `Sipe_Olaoluwa_301911387_` prefix and no spaces. Each name says what the image shows.
 
 ## Portfolio 1 — Database design and modelling (7 marks)
@@ -134,15 +134,15 @@ Keep this to a ShopFlow primary and one read replica.
 
 Write this after the five portfolios have saved evidence. The LMS submission is 2–3 pages.
 
-**Still to do**
+**Done**
 
-- [ ] `Sipe_Olaoluwa_301911387_Documentation_summary.md`, 2–3 pages, covering all five portfolios and the ShopFlow case study.
-- [ ] GitHub repository link, and a check that the link opens for the assessor.
-- [ ] Pointers to the screenshots and output already saved in the portfolio folders.
-- [ ] Individual reflection: design choices, what failed during testing, and what changed because of that.
-- [ ] References for PostgreSQL, MongoDB, and any other external material used.
-- [ ] AI-use declaration: the tool, what it was used for, and how the output was checked against a real database run.
-- [ ] README in the documentation folder that points at the summary and lists the files submitted on the LMS.
+- [x] `Sipe_Olaoluwa_301911387_Documentation_summary.md`, about 960 words, covering all five portfolios and the ShopFlow case study.
+- [x] GitHub link `https://github.com/olaoluwasipe/Sipe_Olaoluwa_301911387`. On 12 November 2026 it opened without a login.
+- [x] The summary points at the screenshots and output already saved in the portfolio folders.
+- [x] Individual reflection: design choices, what failed during testing, and what changed because of that.
+- [x] References for PostgreSQL 17, hot standby, and MongoDB 7.
+- [x] AI-use declaration: Cursor with Grok, what it drafted, and that the figures were checked against the saved database runs.
+- [x] Documentation README points at the summary and lists it as the LMS file.
 
 ## Commit approach
 

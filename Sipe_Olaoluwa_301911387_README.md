@@ -41,7 +41,7 @@ Checked on 12 November 2026. The checklist is `Sipe_Olaoluwa_301911387_PROJECT_P
 | 3. Transactions | Done. A committed order, a rolled-back order, a lost update, and a row-lock run are saved. |
 | 4. NoSQL | Done. MongoDB holds five customer history documents. Query output is saved. |
 | 5. Distributed databases | Done. A primary and a read replica are running. The design note, replica read, and lag output are in the folder. |
-| Final documentation | Not started. |
+| Final documentation | Done. The 2–3 page summary, reflection, references, and AI-use declaration are in the documentation folder. The GitHub link opens without a login. |
 
 Results are described as complete only after they have been run and checked.
 
