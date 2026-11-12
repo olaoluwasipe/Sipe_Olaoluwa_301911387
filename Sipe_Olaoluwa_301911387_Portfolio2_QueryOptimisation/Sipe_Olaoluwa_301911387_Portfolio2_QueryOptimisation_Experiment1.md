@@ -70,3 +70,30 @@ This demonstrates that query optimisation depends on the database query planner'
 The experiment demonstrated that adding an appropriate index can improve query performance by reducing unnecessary data access.
 
 The recorded execution time decreased from 4.090 ms to 2.273 ms. However, execution times can vary due to caching and system activity, so execution plans and buffer statistics should also be considered when evaluating optimisation.
+
+### Additional Optimisation: Customer and Order Date Index
+
+A second composite index was introduced to support the customer order-history query:
+
+```sql
+CREATE INDEX idx_orders_customer_created_at
+ON orders (customer_id, created_at DESC);
+
+ANALYZE orders;
+```
+
+The index was designed to support filtering by customer ID and ordering by order creation date.
+
+**Execution result:**
+
+- Previous execution time: 2.565 ms
+- New execution time: 0.895 ms
+- Execution-time reduction: approximately 65.1%
+
+PostgreSQL used a Bitmap Index Scan on the new index, followed by a Bitmap Heap Scan on the orders table.
+
+A separate sort operation remained in the execution plan because bitmap heap scans do not preserve index ordering.
+
+The result demonstrates that an index can improve data retrieval even when the query planner does not eliminate every operation in the execution plan.
+
+The benchmark is based on individual recorded executions, so the measured improvement should not be interpreted as a guaranteed performance gain under all workloads.
