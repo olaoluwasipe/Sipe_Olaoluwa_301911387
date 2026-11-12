@@ -3,7 +3,8 @@
 **Student:** Olaoluwa Sipe  
 **Student ID:** 301911387  
 **Course:** MIT 8103 — Advanced Database Systems  
-**Session:** 2026/2027
+**Session:** 2026/2027  
+**Repository:** https://github.com/olaoluwasipe/Sipe_Olaoluwa_301911387
 
 ## Project overview
 
