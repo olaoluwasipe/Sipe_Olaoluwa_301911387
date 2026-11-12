@@ -1,0 +1,104 @@
+=== Primary replication status ===
+ application_name |   state   | sync_state | sent_lsn  | replay_lsn | replay_lag 
+------------------+-----------+------------+-----------+------------+------------
+ shopflow_replica | streaming | async      | 0/6000060 | 0/6000060  | 
+(1 row)
+
+=== Replica read: recovery, product list, Query 3 ===
+ in_recovery | replay_paused | replay_lsn 
+-------------+---------------+------------
+ t           | f             | 0/6000060
+(1 row)
+
+  status   |    sender_host    | sender_port |    slot_name     
+-----------+-------------------+-------------+------------------
+ streaming | shopflow-postgres |        5432 | shopflow_replica
+(1 row)
+
+ product_count 
+---------------
+          2009
+(1 row)
+
+ id |          name          |  price   | stock 
+----+------------------------+----------+-------
+  1 | Wireless Mouse         |  8500.00 |    48
+  2 | Mechanical Keyboard    | 15000.00 |    30
+  3 | LED Monitor            | 95000.00 |    12
+  4 | HDMI Cable             |  4500.00 |    70
+  5 | Office Chair           | 78000.00 |     8
+  6 | Office Desk            | 65000.00 |    10
+  7 | Notebook               |  1200.00 |   148
+  8 | Pen Pack               |  2500.00 |    97
+  9 | Wireless Headset       | 22000.00 |    25
+ 10 | Benchmark Product 0001 |  1137.00 |    22
+(10 rows)
+
+     revenue_month      | successful_payment_count | monthly_revenue 
+------------------------+--------------------------+-----------------
+ 2025-11-01 00:00:00+00 |                      846 |    297928533.00
+ 2025-12-01 00:00:00+00 |                     1314 |    466868481.00
+ 2026-01-01 00:00:00+00 |                     1340 |    482326344.00
+ 2026-02-01 00:00:00+00 |                     1266 |    455497774.00
+ 2026-03-01 00:00:00+00 |                     1338 |    477886675.00
+ 2026-04-01 00:00:00+00 |                     1320 |    459576492.00
+ 2026-05-01 00:00:00+00 |                     1356 |    479154385.00
+ 2026-06-01 00:00:00+00 |                     1321 |    466568435.00
+ 2026-07-01 00:00:00+00 |                     1375 |    486579013.00
+ 2026-08-01 00:00:00+00 |                     1373 |    496632094.00
+ 2026-09-01 00:00:00+00 |                     1322 |    470537769.00
+ 2026-10-01 00:00:00+00 |                     1375 |    480104909.00
+ 2026-11-01 00:00:00+00 |                      458 |    159780710.00
+(13 rows)
+
+=== Pause WAL replay on the replica ===
+ pg_wal_replay_pause 
+---------------------
+ 
+(1 row)
+
+=== Insert a 1.00 successful payment for order 1 on the primary ===
+Demo payment id: 20006
+=== Successful payment total while replay is paused ===
+ server  | successful_payments | total_amount  
+---------+---------------------+---------------
+ primary |               16005 | 5679441615.00
+(1 row)
+
+ server  | successful_payments | total_amount  
+---------+---------------------+---------------
+ replica |               16004 | 5679441614.00
+(1 row)
+
+=== Query 3 row for order 1's month, primary then replica ===
+ server  |     revenue_month      | successful_payment_count | monthly_revenue 
+---------+------------------------+--------------------------+-----------------
+ primary | 2026-11-01 00:00:00+00 |                      459 |    159780711.00
+(1 row)
+
+ server  |     revenue_month      | successful_payment_count | monthly_revenue 
+---------+------------------------+--------------------------+-----------------
+ replica | 2026-11-01 00:00:00+00 |                      458 |    159780710.00
+(1 row)
+
+Primary total 5679441615.00; replica total 5679441614.00.
+=== Delete the demo payment and resume replay ===
+DELETE 1
+ pg_wal_replay_resume 
+----------------------
+ 
+(1 row)
+
+=== Successful payment total after replay catches up ===
+ server  | successful_payments | total_amount  
+---------+---------------------+---------------
+ primary |               16004 | 5679441614.00
+(1 row)
+
+ server  | successful_payments | total_amount  
+---------+---------------------+---------------
+ replica |               16004 | 5679441614.00
+(1 row)
+
+Both servers report 5679441614.00 after replay.
+Demo payment removed. Payment ids are not reused, so one id is skipped.

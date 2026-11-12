@@ -9,7 +9,7 @@
 
 ShopFlow is a small e-commerce order management system. This project will use one case study to complete the five database portfolios in the course brief.
 
-PostgreSQL will hold the main business data, such as customers, products, orders, payments, and stock records. MongoDB will be used for one focused example of customer order history. The project will also explain how a database can use a primary server and a read replica.
+PostgreSQL holds the main business data, such as customers, products, orders, payments, and stock records. MongoDB holds one focused example of customer order history. Portfolio 5 runs a primary and a read replica of that PostgreSQL database.
 
 The aim is to show the database ideas in the assignment with a working, easy-to-follow example. The project will stay focused on the course requirements.
 
@@ -40,7 +40,7 @@ Checked on 12 November 2026. The checklist is `Sipe_Olaoluwa_301911387_PROJECT_P
 | 2. Query optimisation | Done. Six queries, three index experiments, saved plans, and saved result rows are in the folder. |
 | 3. Transactions | Done. A committed order, a rolled-back order, a lost update, and a row-lock run are saved. |
 | 4. NoSQL | Done. MongoDB holds five customer history documents. Query output is saved. |
-| 5. Distributed databases | Not started. |
+| 5. Distributed databases | Done. A primary and a read replica are running. The design note, replica read, and lag output are in the folder. |
 | Final documentation | Not started. |
 
 Results are described as complete only after they have been run and checked.

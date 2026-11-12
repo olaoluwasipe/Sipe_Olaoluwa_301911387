@@ -31,6 +31,8 @@ From this folder:
 docker compose -f Sipe_Olaoluwa_301911387_Portfolio1_DatabaseDesign_compose.yml up -d
 ```
 
+This starts PostgreSQL and MongoDB. The read replica is the Compose profile `replica`, started from the Portfolio 5 README.
+
 PostgreSQL 17 listens on `localhost:5433`. Database `shopflow`, user `shopflow_user`, password `shopflow_local_only` (set in the Compose file).
 
 ```bash

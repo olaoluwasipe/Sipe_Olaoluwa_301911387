@@ -14,13 +14,13 @@ Checked on 12 November 2026.
 | 2. Query processing and optimisation | 7 | Done. Six queries, three index experiments, saved plans, and saved result rows are in the folder. |
 | 3. Transactions and concurrency | 7 | Done. A committed order, a rolled-back order, a lost update, and a row-lock run are saved. |
 | 4. NoSQL and advanced data models | 7 | Done. MongoDB holds five customer history documents. Query output is saved. |
-| 5. Distributed and cloud databases | 6 | Not started. The primary and replica idea is named in the case study only. |
+| 5. Distributed and cloud databases | 6 | Done. A primary and a read replica are running. The design note, replica read, and lag output are in the folder. |
 | Final documentation | 6 | Not started. The case study and this plan exist. The LMS summary does not. |
 
 ## Working order
 
 1. Portfolios 1 to 4 are closed. Push the local commits that are not on origin yet.
-2. Portfolio 5: primary and read replica for ShopFlow.
+2. Portfolio 5 is done: primary and read replica for ShopFlow.
 3. The 2–3 page LMS summary, reflection, references, and AI-use declaration.
 
 ## Working approach
@@ -120,15 +120,15 @@ MongoDB holds customer order history only. It does not replace PostgreSQL and it
 
 Keep this to a ShopFlow primary and one read replica.
 
-**Still to do**
+**Done**
 
-- [ ] `Sipe_Olaoluwa_301911387_Portfolio5_DistributedDatabases_design.md`.
-- [ ] Data flow: orders, stock changes, and payments write to the primary. Product lists and sales reports read from the replica.
-- [ ] State that the stock check before an order reads the primary. A replica can be behind the latest sale.
-- [ ] State what replica lag does to Query 3, monthly revenue.
-- [ ] Availability: what a primary failure means for new orders, and what the replica can still serve.
-- [ ] Either add a second PostgreSQL container and show a replica read, or write in the design note that this portfolio is a design discussion and name what was not run.
-- [ ] README: how the design maps onto ShopFlow, and how to run the replica if one was built.
+- [x] `Sipe_Olaoluwa_301911387_Portfolio5_DistributedDatabases_design.md`. Primary on port 5433, physical replica on port 5435, asynchronous streaming through slot `shopflow_replica`.
+- [x] Data flow: orders, stock changes, and payments write to the primary. Product lists and Query 3 read from the replica.
+- [x] The stock check before an order reads the primary. A replica can be behind the latest sale.
+- [x] Replica lag and Query 3. With replay paused, November 2026 on the replica stayed at 458 payments and 159780710.00. The primary, after a 1.00 payment on order 1, showed 459 and 159780711.00.
+- [x] Availability: a primary failure stops new orders, stock changes, and payments. The replica can still serve product lists and Query 3 from the last log it replayed.
+- [x] Second PostgreSQL container `shopflow-postgres-replica` in the Compose file, profile `replica`. Replica read and lag output are saved. Promotion, automatic failover, synchronous replication, sharding, and a cloud deployment were left out of the run.
+- [x] README: how the design maps onto ShopFlow, and how to start the replica.
 
 ## Final documentation (6 marks)
 

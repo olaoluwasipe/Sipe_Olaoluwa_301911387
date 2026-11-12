@@ -28,7 +28,7 @@ The planned tables are:
 
 MongoDB will be used for a focused customer order-history example. It will not replace the main PostgreSQL database or hold a second copy of every table.
 
-The distributed database portfolio will explain a PostgreSQL primary and read-replica setup. Any practical setup will be added only if it is useful and can be tested within the project scope.
+The distributed database portfolio uses a PostgreSQL primary and one read replica. The replica is a second local PostgreSQL container. Orders, stock changes, and payments are written to the primary. Product lists and sales reports are read from the replica. The design note and run steps are in the Portfolio 5 folder.
 
 ## 4. Main tasks
 

@@ -1,0 +1,4 @@
+INSERT INTO payments (order_id, amount, status) VALUES (1, 1.00, 'successful');
+-- run on localhost:5435, 12 November 2026
+
+ERROR:  cannot execute INSERT in a read-only transaction
