@@ -34,6 +34,8 @@ CREATE TABLE orders (
     status VARCHAR(30) NOT NULL DEFAULT 'pending',
     total NUMERIC(12, 2) NOT NULL DEFAULT 0
         CHECK (total >= 0),
+    -- Portfolio 2 reports and indexes use this column.
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_orders_customer
         FOREIGN KEY (customer_id)

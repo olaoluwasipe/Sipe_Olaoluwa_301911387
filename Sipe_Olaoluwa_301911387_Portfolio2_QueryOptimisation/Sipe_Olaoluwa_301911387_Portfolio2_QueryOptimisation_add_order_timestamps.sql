@@ -1,9 +1,10 @@
 
 BEGIN;
 
--- Add a timestamp to each order.
+-- orders.created_at is created in the Portfolio 1 schema.
+-- IF NOT EXISTS keeps this script safe when that column is already there.
 ALTER TABLE orders
-ADD COLUMN created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
 -- Spread synthetic order dates across the previous 365 days.
 -- This makes monthly reporting possible for benchmark purposes.
