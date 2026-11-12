@@ -12,18 +12,17 @@ Checked on 12 November 2026.
 |---|---:|---|
 | 1. Database design and modelling | 7 | Done. Schema, seed, rendered ER diagram, write-ups, and run steps are in the folder. |
 | 2. Query processing and optimisation | 7 | Done. Six queries, three index experiments, saved plans, and saved result rows are in the folder. |
-| 3. Transactions and concurrency | 7 | Not started. |
+| 3. Transactions and concurrency | 7 | Done. A committed order, a rolled-back order, a lost update, and a row-lock run are saved. |
 | 4. NoSQL and advanced data models | 7 | Not started. |
 | 5. Distributed and cloud databases | 6 | Not started. The primary and replica idea is named in the case study only. |
 | Final documentation | 6 | Not started. The case study and this plan exist. The LMS summary does not. |
 
 ## Working order
 
-1. Portfolio 1 and Portfolio 2 are closed. Push the local commits that are not on origin yet.
-2. Portfolio 3: commit, rollback, and the two-session stock test.
-3. Portfolio 4: MongoDB customer order history.
-4. Portfolio 5: primary and read replica for ShopFlow.
-5. The 2–3 page LMS summary, reflection, references, and AI-use declaration.
+1. Portfolios 1 to 3 are closed. Push the local commits that are not on origin yet.
+2. Portfolio 4: MongoDB customer order history.
+3. Portfolio 5: primary and read replica for ShopFlow.
+4. The 2–3 page LMS summary, reflection, references, and AI-use declaration.
 
 ## Working approach
 
@@ -92,14 +91,14 @@ These sit outside a single portfolio and affect the whole submission.
 
 Use the same ShopFlow tables. `orders.total` must be updated in the same transaction as the order items, as the normalisation note already says.
 
-**Still to do**
+**Done**
 
-- [ ] `Sipe_Olaoluwa_301911387_Portfolio3_Transactions_place_order.sql`. In one transaction: insert the order, insert the items, reduce `products.stock`, insert `inventory_logs`, set `orders.total` from the items, then `COMMIT`. Save stock before and after.
-- [ ] `Sipe_Olaoluwa_301911387_Portfolio3_Transactions_rollback_order.sql`. Start the same order, fail it when stock is too low, and `ROLLBACK`. Save output that shows the stock and the order list are unchanged.
-- [ ] Two `psql` sessions on one product, under the default isolation level. Both read the same stock and both write a reduction, so one update is lost. Save both session transcripts.
-- [ ] Repeat the two-session test with `SELECT ... FOR UPDATE` on the product row. One session waits. The final stock matches both reductions. Save both transcripts.
-- [ ] `Sipe_Olaoluwa_301911387_Portfolio3_Transactions_notes.md`. State the isolation level, what the lost update was, and what the row lock changed.
-- [ ] README: how to open the two sessions and which scripts to run.
+- [x] `place_order.sql` commits one Notebook order. Stock goes from 150 to 148, and `orders.total` is 2400.00, matching the line. Output is saved.
+- [x] `rollback_order.sql` fails `products_stock_check` on an order for 100,000 notebooks, then `ROLLBACK`. Stock stays 148 and the order count stays 20006.
+- [x] Two sessions on Pen Pack under read committed. Both read 100. Final stock is 97, so the reduction of 2 is lost. Session B waited 2026 ms. Both transcripts are saved.
+- [x] Two sessions on HDMI Cable with `SELECT ... FOR UPDATE`. Session B waited 2615 ms, read 73, and the final stock is 70, which is 75 - 2 - 3.
+- [x] `notes.md` states the isolation level, the lost update, and what the row lock changed.
+- [x] README: how to open the two sessions and which scripts to run.
 
 ## Portfolio 4 — NoSQL and advanced data models (7 marks)
 

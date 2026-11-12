@@ -1,0 +1,32 @@
+\timing on
+Timing is on.
+\echo === Session A: row-lock, HDMI Cable ===
+=== Session A: row-lock, HDMI Cable ===
+SHOW transaction_isolation;
+ transaction_isolation 
+-----------------------
+ read committed
+(1 row)
+
+Time: 1.118 ms
+BEGIN;
+BEGIN
+Time: 0.537 ms
+SELECT stock AS read_stock FROM products WHERE name = 'HDMI Cable' FOR UPDATE \gset
+Time: 7.359 ms
+\echo session_a_read=:read_stock
+session_a_read=75
+UPDATE products SET stock = :read_stock - 2 WHERE name = 'HDMI Cable';
+UPDATE 1
+Time: 5.085 ms
+COMMIT;
+COMMIT
+Time: 1.727 ms
+SELECT name, stock FROM products WHERE name = 'HDMI Cable';
+    name    | stock 
+------------+-------
+ HDMI Cable |    70
+(1 row)
+
+Time: 1.677 ms
+\q

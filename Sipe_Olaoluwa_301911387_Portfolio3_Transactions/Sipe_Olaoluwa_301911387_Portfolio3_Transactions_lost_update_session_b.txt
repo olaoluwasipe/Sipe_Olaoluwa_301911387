@@ -1,0 +1,32 @@
+\timing on
+Timing is on.
+\echo === Session B: lost-update, Pen Pack ===
+=== Session B: lost-update, Pen Pack ===
+SHOW transaction_isolation;
+ transaction_isolation 
+-----------------------
+ read committed
+(1 row)
+
+Time: 9.525 ms
+BEGIN;
+BEGIN
+Time: 0.976 ms
+SELECT stock AS read_stock FROM products WHERE name = 'Pen Pack'  \gset
+Time: 23.001 ms
+\echo session_b_read=:read_stock
+session_b_read=100
+UPDATE products SET stock = :read_stock - 3 WHERE name = 'Pen Pack';
+UPDATE 1
+Time: 2026.343 ms (00:02.026)
+COMMIT;
+COMMIT
+Time: 1.340 ms
+SELECT name, stock FROM products WHERE name = 'Pen Pack';
+   name   | stock 
+----------+-------
+ Pen Pack |    97
+(1 row)
+
+Time: 2.733 ms
+\q

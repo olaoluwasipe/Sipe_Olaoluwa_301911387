@@ -1,0 +1,89 @@
+-- Start an order that asks for more Notebook stock than the shop has.
+-- The stock check fails, ROLLBACK removes the order, and the saved rows stay as they were.
+-- ON_ERROR_STOP is off so psql continues to the ROLLBACK after the constraint error.
+\set ON_ERROR_STOP off
+\timing on
+Timing is on.
+\echo '=== Before the failed order ==='
+=== Before the failed order ===
+SELECT name, stock
+FROM products
+WHERE name = 'Notebook';
+   name   | stock 
+----------+-------
+ Notebook |   148
+(1 row)
+
+Time: 4.220 ms
+SELECT COUNT(*) AS orders, MAX(id) AS max_order_id
+FROM orders;
+ orders | max_order_id 
+--------+--------------
+  20006 |        20006
+(1 row)
+
+Time: 14.394 ms
+SELECT COUNT(*) AS notebook_logs
+FROM inventory_logs AS l
+JOIN products AS p ON p.id = l.product_id
+WHERE p.name = 'Notebook';
+ notebook_logs 
+---------------
+             2
+(1 row)
+
+Time: 1.824 ms
+BEGIN;
+BEGIN
+Time: 0.274 ms
+INSERT INTO orders (customer_id, status, total)
+SELECT id, 'confirmed', 0
+FROM customers
+WHERE email = 'alice@example.com'
+RETURNING id \gset order_
+INSERT 0 1
+Time: 1.987 ms
+INSERT INTO order_items (order_id, product_id, quantity, price)
+SELECT :order_id, p.id, 100000, p.price
+FROM products p
+WHERE p.name = 'Notebook';
+INSERT 0 1
+Time: 1.175 ms
+UPDATE products
+SET stock = stock - 100000
+WHERE name = 'Notebook';
+psql:/Users/olaoluwa/Documents/GitHub/Sipe_Olaoluwa_301911387/Sipe_Olaoluwa_301911387_Portfolio3_Transactions/Sipe_Olaoluwa_301911387_Portfolio3_Transactions_rollback_order.sql:36: ERROR:  new row for relation "products" violates check constraint "products_stock_check"
+DETAIL:  Failing row contains (7, 4, Notebook, 1200.00, -99852).
+Time: 0.819 ms
+ROLLBACK;
+ROLLBACK
+Time: 0.301 ms
+\echo '=== After ROLLBACK ==='
+=== After ROLLBACK ===
+SELECT name, stock
+FROM products
+WHERE name = 'Notebook';
+   name   | stock 
+----------+-------
+ Notebook |   148
+(1 row)
+
+Time: 0.424 ms
+SELECT COUNT(*) AS orders, MAX(id) AS max_order_id
+FROM orders;
+ orders | max_order_id 
+--------+--------------
+  20006 |        20006
+(1 row)
+
+Time: 1.951 ms
+SELECT COUNT(*) AS notebook_logs
+FROM inventory_logs AS l
+JOIN products AS p ON p.id = l.product_id
+WHERE p.name = 'Notebook';
+ notebook_logs 
+---------------
+             2
+(1 row)
+
+Time: 1.298 ms
