@@ -28,9 +28,20 @@ The full checklist for every portfolio is in `Sipe_Olaoluwa_301911387_PROJECT_PL
 - [ ] Save the before and after `EXPLAIN (ANALYZE, BUFFERS)` text for the `created_at` index.
 - [ ] Leave the `enable_bitmapscan = off` run out of the improvement table. That plan took 95.582 ms, which is slower than the bitmap plan.
 - [ ] Add `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_indexes.sql` with the `CREATE INDEX` statements and `ANALYZE`.
-- [ ] Second optimisation on Query 2, top 10 products. Baseline already captured: sequential scans of about 60,009 order items and 2,009 products, hash aggregate, 58.062 ms. Test an index on `order_items (product_id)`. Save plans, access method, and buffer counts.
+- [ ] Second optimisation on Query 2, top 10 products. Baseline already captured in `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_bitmapscan_off_and_query2_baseline.png`: sequential scans of about 60,009 order items and 2,009 products, hash aggregate, 58.062 ms. Test an index on `order_items (product_id)`. Save plans, access method, and buffer counts.
 - [ ] Save the result rows for all six queries.
 - [ ] Write the run order below. Keep the assumptions above.
+
+## Saved screenshots
+
+- `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_Experiment1_baseline_plan.png` — customer 500 order history sorted by `orders.id`, sequential scan, 4.090 ms.
+- `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_order_history_before_created_at_index.png` — the same history sorted by `created_at`, using `idx_orders_customer_id_id_desc`, 2.565 ms.
+- `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_benchmark_order_and_payment_counts.png` — 20,005 orders and 20,005 payments after the benchmark load.
+- `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_query1_and_query2_results.png` — Query 1 order history and Query 2 top 10 products.
+- `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_query3_and_query4_results.png` — Query 3 monthly revenue and the start of Query 4 low stock.
+- `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_query4_query5_and_query6_results.png` — the rest of Query 4, Query 5 top customers, and Query 6 payment status.
+- `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_bitmapscan_off_and_query2_baseline.png` — `enable_bitmapscan = off` index scan at 95.582 ms, then the Query 2 baseline plan at 58.062 ms.
+- `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_bitmapscan_off_and_query2_baseline_plans.png` — the same two plans, framed on the plan text.
 
 ## How to run
 

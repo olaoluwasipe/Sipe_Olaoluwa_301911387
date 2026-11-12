@@ -45,7 +45,7 @@ These sit outside a single portfolio and affect the whole submission.
 - [ ] Push the local commits that are not on origin yet. On 12 November 2026, `main` was 6 commits ahead of origin.
 - [ ] Keep committing each finished piece as it is completed, so the history is spread across the work rather than one upload at the deadline.
 - [ ] If the GitHub repository stays private, give the assessor access before the LMS submission.
-- [ ] Rename screenshot files so the names have no spaces. Use the `Sipe_Olaoluwa_301911387_` prefix.
+- [x] Screenshot files renamed with the `Sipe_Olaoluwa_301911387_` prefix and no spaces. Each name says what the image shows.
 
 ## Portfolio 1 — Database design and modelling (7 marks)
 
@@ -88,7 +88,7 @@ These sit outside a single portfolio and affect the whole submission.
 - [ ] Save the before and after `EXPLAIN (ANALYZE, BUFFERS)` text for the `created_at` index next to the screenshots.
 - [ ] Leave the `enable_bitmapscan = off` run out of the improvement table. That plan used an ordered index scan and took 95.582 ms, which is slower than the bitmap plan.
 - [ ] Add `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_indexes.sql` with the `CREATE INDEX` statements and `ANALYZE`. The statements currently live only inside the experiment notes.
-- [ ] Run a second optimisation on Query 2, top 10 products. The 08:24 screenshot already has the baseline: sequential scans of about 60,009 order items and 2,009 products, hash aggregate, 58.062 ms. Test an index on `order_items (product_id)`. Save the before and after plans, and describe the access method and buffer counts as well as the time.
+- [ ] Run a second optimisation on Query 2, top 10 products. The baseline is in `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_bitmapscan_off_and_query2_baseline.png`: sequential scans of about 60,009 order items and 2,009 products, hash aggregate, 58.062 ms. Test an index on `order_items (product_id)`. Save the before and after plans, and describe the access method and buffer counts as well as the time.
 - [ ] Save the result rows for all six queries, not only the plans.
 - [ ] Replace the placeholder part of the README with the run order: schema, seed, benchmark script, timestamp script, indexes, then the six queries. Keep the assumptions.
 

@@ -49,6 +49,6 @@ psql -h localhost -p 5433 -U shopflow_user -d shopflow \
 
 The screenshots below were taken on 11 November 2026, after the seed and before the Portfolio 2 benchmark. Counts on the current database are higher because that benchmark has since been loaded.
 
-- `Screenshot 2026-11-11 at 13.47.22.png` — row counts after the seed: 5 customers, 5 categories, 9 products, 5 orders, 9 order items, 5 payments, and 9 inventory logs. Client `psql` 18.4, server PostgreSQL 17.11, port 5433.
-- `Screenshot 2026-11-11 at 13.47.28.png` — `orders.total` matches `SUM(quantity * price)` for all five seed orders: Alice Johnson 32000.00, Brian Smith 104000.00, Chika Okafor 143000.00, David Williams 11000.00, Esther Adeyemi 22000.00.
-- `Screenshot 2026-11-11 at 13.54.11.png` — the six foreign keys: `products.category_id`, `orders.customer_id`, `order_items.order_id`, `order_items.product_id`, `payments.order_id`, and `inventory_logs.product_id`.
+- `Sipe_Olaoluwa_301911387_Portfolio1_DatabaseDesign_seed_row_counts.png` — row counts after the seed: 5 customers, 5 categories, 9 products, 5 orders, 9 order items, 5 payments, and 9 inventory logs. Client `psql` 18.4, server PostgreSQL 17.11, port 5433.
+- `Sipe_Olaoluwa_301911387_Portfolio1_DatabaseDesign_order_totals.png` — `orders.total` matches `SUM(quantity * price)` for all five seed orders: Alice Johnson 32000.00, Brian Smith 104000.00, Chika Okafor 143000.00, David Williams 11000.00, Esther Adeyemi 22000.00.
+- `Sipe_Olaoluwa_301911387_Portfolio1_DatabaseDesign_foreign_keys.png` — the six foreign keys: `products.category_id`, `orders.customer_id`, `order_items.order_id`, `order_items.product_id`, `payments.order_id`, and `inventory_logs.product_id`.
