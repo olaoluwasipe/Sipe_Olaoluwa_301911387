@@ -37,7 +37,7 @@ Checked on 12 November 2026. The checklist is `Sipe_Olaoluwa_301911387_PROJECT_P
 | Portfolio | Status |
 |---|---|
 | 1. Database design | Done. Schema, seed, rendered ER diagram, write-ups, and run steps are in the folder. |
-| 2. Query optimisation | In progress. Six queries and one index experiment are done. A second experiment and saved query results are still open. |
+| 2. Query optimisation | Done. Six queries, three index experiments, saved plans, and saved result rows are in the folder. |
 | 3. Transactions | Not started. |
 | 4. NoSQL | Not started. |
 | 5. Distributed databases | Not started. |

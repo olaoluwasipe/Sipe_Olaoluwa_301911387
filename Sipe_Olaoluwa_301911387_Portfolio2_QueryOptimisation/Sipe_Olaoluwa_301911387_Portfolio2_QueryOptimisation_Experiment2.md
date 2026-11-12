@@ -1,72 +1,71 @@
-# Portfolio 2 — Query Optimisation Experiment 1
+# Portfolio 2 — Query Optimisation Experiment 2
 
-## Experiment: Optimising Customer Order Retrieval
+## Experiment: Customer order history sorted by `created_at`
 
 ### 1. Objective
 
-The objective was to investigate how indexing affects the performance of retrieving orders belonging to a particular customer.
+Query 1 returns the orders for customer 500, sorted by `orders.created_at` descending. This experiment checks whether an index on `(customer_id, created_at DESC)` changes that plan.
 
-The query joins the `orders` and `customers` tables, filters orders using `customer_id`, and sorts the results by descending order ID.
+The statement is Query 1 in `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_business_queries.sql`.
 
-### 2. Baseline
+### 2. Before the `created_at` index
 
-Before introducing the index, PostgreSQL used:
+Without `idx_orders_customer_created_at`, PostgreSQL used:
 
 - An index scan on `customers_pkey`.
-- A sequential scan on `orders`.
-- A nested loop join.
-- A separate sort operation.
+- A bitmap index scan on `idx_orders_customer_id_id_desc`, then a bitmap heap scan on `orders`.
+- A nested loop.
+- A separate quicksort on `o.created_at DESC`.
 
-The sequential scan examined 20,005 order records and removed 19,985 records that did not match the specified customer.
+The first capture of that plan took 2.565 ms. The screenshot is `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_order_history_before_created_at_index.png`.
 
-**Baseline execution time: 4.090 ms.**
+The saved repeat is `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_Experiment2_before.txt`. For that run the `created_at` index was dropped inside a transaction and restored with `ROLLBACK`. The access method was the same. Execution time: 6.722 ms. The sort node reported `shared hit=31`.
 
 ### 3. Optimisation
 
-The following composite index was created:
-
 ```sql
-CREATE INDEX idx_orders_customer_id_id_desc
-ON orders (customer_id, id DESC);
+CREATE INDEX idx_orders_customer_created_at
+ON orders (customer_id, created_at DESC);
 
 ANALYZE orders;
 ```
 
-The index was designed to support filtering by customer and ordering by descending order ID.
+The statement is in `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_indexes.sql`.
 
-### 4. Results after optimisation
+### 4. After the index
 
-PostgreSQL changed its execution strategy and used:
+PostgreSQL used:
 
-- An index scan on the customer primary key.
-- A bitmap index scan on `idx_orders_customer_id_id_desc`.
-- A bitmap heap scan on `orders`.
-- A nested loop join.
-- A separate sort operation.
+- An index scan on `customers_pkey`.
+- A bitmap index scan on `idx_orders_customer_created_at`, then a bitmap heap scan on `orders`.
+- A nested loop.
+- A separate quicksort on `o.created_at DESC`.
 
-**Execution time after indexing: 2.273 ms.**
+The first capture took 0.895 ms. The sort node reported `shared hit=23` and `read=2`.
 
-### 5. Performance comparison
+The saved repeat is `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_Experiment2_after.txt`. Execution time: 0.879 ms. The sort node reported `shared hit=31`.
+
+### 5. Comparison of the saved plans
+
+These two files were captured on 12 November 2026, one after the other.
 
 | Metric | Before | After |
 |---|---:|---:|
-| Execution time | 4.090 ms | 2.273 ms |
-| Order access method | Sequential scan | Bitmap heap scan |
-| Index usage | Customer primary key only | Customer primary key and new composite index |
-| Shared buffer activity | 312 hits | 23 hits, 2 reads |
+| Execution time | 6.722 ms | 0.879 ms |
+| Orders access | Bitmap heap scan via `idx_orders_customer_id_id_desc` | Bitmap heap scan via `idx_orders_customer_created_at` |
+| Sort | quicksort on `created_at DESC` | quicksort on `created_at DESC` |
+| Buffers at the sort | shared hit=31 | shared hit=31 |
 
-The execution time decreased by approximately 44.4%.
+The earlier capture of the same two plan shapes took 2.565 ms and then 0.895 ms, about 65.1% less execution time. The saved repeat also dropped, from 6.722 ms to 0.879 ms. On the warm repeat the buffer count did not fall, so that time difference is not a large reduction in pages read.
+
+A separate run set `enable_bitmapscan = off`. PostgreSQL then used an ordered index scan on `idx_orders_customer_created_at` and took 95.582 ms. That plan is slower than the bitmap plan, so it is not included in the table. The screenshot is `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_bitmapscan_off_and_query2_baseline.png`.
 
 ### 6. Analysis
 
-The index reduced the amount of unnecessary table scanning required to locate a customer's orders.
+The new index supplies the customer filter directly. A bitmap heap scan does not keep index order, so the sort on `created_at` stays in the plan even though `created_at` is the second index column.
 
-PostgreSQL selected a bitmap scan instead of a regular ordered index scan. Consequently, the separate sort operation remained in the execution plan despite the composite index containing the ordering column.
-
-This demonstrates that query optimisation depends on the database query planner's cost estimates and the selected execution strategy, rather than simply the presence of an index.
+The ordered index scan was able to walk the index in `created_at` order, and it was much slower on this data. The bitmap plan remains the one selected when the planner is left to choose.
 
 ### 7. Conclusion
 
-The experiment demonstrated that adding an appropriate index can improve query performance by reducing unnecessary data access.
-
-The recorded execution time decreased from 4.090 ms to 2.273 ms. However, execution times can vary due to caching and system activity, so execution plans and buffer statistics should also be considered when evaluating optimisation.
+`idx_orders_customer_created_at` changed which index located customer 500's orders, and both captures were faster than the plan that used `idx_orders_customer_id_id_desc`. The sort remained. Forcing an ordered index scan made the query slower, so that run is not treated as an improvement.

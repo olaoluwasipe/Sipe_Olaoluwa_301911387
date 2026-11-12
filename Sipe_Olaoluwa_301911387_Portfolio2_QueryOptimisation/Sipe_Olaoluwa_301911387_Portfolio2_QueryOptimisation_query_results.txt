@@ -1,0 +1,257 @@
+-- QUERY 1: Customer order history
+SELECT
+    c.id AS customer_id,
+    c.name AS customer_name,
+    o.id AS order_id,
+    o.status,
+    o.total,
+    o.created_at
+FROM customers c
+JOIN orders o ON o.customer_id = c.id
+WHERE c.id = 500
+ORDER BY o.created_at DESC;
+ customer_id |      customer_name      | order_id | status  |   total   |          created_at           
+-------------+-------------------------+----------+---------+-----------+-------------------------------
+         500 | Benchmark Customer 0495 |     1510 | pending | 524175.00 | 2026-09-22 09:08:25.643457+00
+         500 | Benchmark Customer 0495 |     5530 | pending | 537601.00 | 2026-09-17 21:08:25.643457+00
+         500 | Benchmark Customer 0495 |     9550 | pending | 551027.00 | 2026-09-12 09:08:25.643457+00
+         500 | Benchmark Customer 0495 |    13570 | pending | 564453.00 | 2026-09-07 21:08:25.643457+00
+         500 | Benchmark Customer 0495 |    17590 | pending | 577879.00 | 2026-09-02 09:08:25.643457+00
+         500 | Benchmark Customer 0495 |      505 | pending | 112662.00 | 2026-06-25 06:08:25.643457+00
+         500 | Benchmark Customer 0495 |     4525 | pending | 128006.00 | 2026-06-19 18:08:25.643457+00
+         500 | Benchmark Customer 0495 |     8545 | pending | 143350.00 | 2026-06-15 06:08:25.643457+00
+         500 | Benchmark Customer 0495 |    12565 | pending | 158694.00 | 2026-06-09 18:08:25.643457+00
+         500 | Benchmark Customer 0495 |    16585 | pending | 174038.00 | 2026-06-05 06:08:25.643457+00
+         500 | Benchmark Customer 0495 |     3520 | pending | 690712.00 | 2026-03-21 15:08:25.643457+00
+         500 | Benchmark Customer 0495 |     7540 | pending | 707974.00 | 2026-03-17 03:08:25.643457+00
+         500 | Benchmark Customer 0495 |    11560 | pending | 725236.00 | 2026-03-11 15:08:25.643457+00
+         500 | Benchmark Customer 0495 |    15580 | pending | 742498.00 | 2026-03-07 03:08:25.643457+00
+         500 | Benchmark Customer 0495 |    19600 | pending | 759760.00 | 2026-03-01 15:08:25.643457+00
+         500 | Benchmark Customer 0495 |     2515 | pending |  96484.00 | 2025-12-21 12:08:25.643457+00
+         500 | Benchmark Customer 0495 |     6535 | pending | 107992.00 | 2025-12-17 00:08:25.643457+00
+         500 | Benchmark Customer 0495 |    10555 | pending | 119500.00 | 2025-12-11 12:08:25.643457+00
+         500 | Benchmark Customer 0495 |    14575 | pending | 131008.00 | 2025-12-07 00:08:25.643457+00
+         500 | Benchmark Customer 0495 |    18595 | pending | 142516.00 | 2025-12-01 12:08:25.643457+00
+(20 rows)
+
+-- QUERY 2: Top 10 best-selling products
+SELECT
+    p.id AS product_id,
+    p.name AS product_name,
+    SUM(oi.quantity) AS units_sold,
+    SUM(oi.quantity * oi.price) AS sales_value
+FROM products p
+JOIN order_items oi ON oi.product_id = p.id
+GROUP BY p.id, p.name
+ORDER BY units_sold DESC
+LIMIT 10;
+ product_id |      product_name      | units_sold | sales_value 
+------------+------------------------+------------+-------------
+          7 | Notebook               |        179 |   214800.00
+       1428 | Benchmark Product 1419 |        177 | 17063331.00
+       1372 | Benchmark Product 1363 |        177 | 15705387.00
+       1104 | Benchmark Product 1095 |        177 |  9206655.00
+        936 | Benchmark Product 0927 |        177 |  5132823.00
+         90 | Benchmark Product 0081 |        177 |  2141169.00
+        644 | Benchmark Product 0635 |        177 | 15575115.00
+        292 | Benchmark Product 0283 |        177 |  7039467.00
+        824 | Benchmark Product 0815 |        177 |  2416935.00
+       1434 | Benchmark Product 1425 |        177 | 17208825.00
+(10 rows)
+
+-- QUERY 3: Monthly revenue from successful payments
+SELECT
+    DATE_TRUNC('month', o.created_at) AS revenue_month,
+    COUNT(p.id) AS successful_payment_count,
+    SUM(p.amount) AS monthly_revenue
+FROM orders o
+JOIN payments p ON p.order_id = o.id
+WHERE p.status = 'successful'
+GROUP BY DATE_TRUNC('month', o.created_at)
+ORDER BY revenue_month;
+     revenue_month      | successful_payment_count | monthly_revenue 
+------------------------+--------------------------+-----------------
+ 2025-11-01 00:00:00+00 |                      846 |    297928533.00
+ 2025-12-01 00:00:00+00 |                     1314 |    466868481.00
+ 2026-01-01 00:00:00+00 |                     1340 |    482326344.00
+ 2026-02-01 00:00:00+00 |                     1266 |    455497774.00
+ 2026-03-01 00:00:00+00 |                     1338 |    477886675.00
+ 2026-04-01 00:00:00+00 |                     1320 |    459576492.00
+ 2026-05-01 00:00:00+00 |                     1356 |    479154385.00
+ 2026-06-01 00:00:00+00 |                     1321 |    466568435.00
+ 2026-07-01 00:00:00+00 |                     1375 |    486579013.00
+ 2026-08-01 00:00:00+00 |                     1373 |    496632094.00
+ 2026-09-01 00:00:00+00 |                     1322 |    470537769.00
+ 2026-10-01 00:00:00+00 |                     1375 |    480104909.00
+ 2026-11-01 00:00:00+00 |                      458 |    159780710.00
+(13 rows)
+
+-- QUERY 4: Products with low stock
+-- Business threshold: 15 units or fewer
+SELECT
+    p.id,
+    p.name,
+    c.name AS category,
+    p.stock
+FROM products p
+JOIN categories c ON c.id = p.category_id
+WHERE p.stock <= 15
+ORDER BY p.stock ASC, p.name;
+  id  |          name          |       category        | stock 
+------+------------------------+-----------------------+-------
+  209 | Benchmark Product 0200 | Benchmark Category 20 |     5
+  409 | Benchmark Product 0400 | Benchmark Category 20 |     5
+  609 | Benchmark Product 0600 | Benchmark Category 20 |     5
+  809 | Benchmark Product 0800 | Benchmark Category 20 |     5
+ 1009 | Benchmark Product 1000 | Benchmark Category 20 |     5
+ 1209 | Benchmark Product 1200 | Benchmark Category 20 |     5
+ 1409 | Benchmark Product 1400 | Benchmark Category 20 |     5
+ 1609 | Benchmark Product 1600 | Benchmark Category 20 |     5
+ 1809 | Benchmark Product 1800 | Benchmark Category 20 |     5
+ 2009 | Benchmark Product 2000 | Benchmark Category 20 |     5
+  162 | Benchmark Product 0153 | Furniture             |     6
+  362 | Benchmark Product 0353 | Furniture             |     6
+  562 | Benchmark Product 0553 | Furniture             |     6
+  762 | Benchmark Product 0753 | Furniture             |     6
+  962 | Benchmark Product 0953 | Furniture             |     6
+ 1162 | Benchmark Product 1153 | Furniture             |     6
+ 1362 | Benchmark Product 1353 | Furniture             |     6
+ 1562 | Benchmark Product 1553 | Furniture             |     6
+ 1762 | Benchmark Product 1753 | Furniture             |     6
+ 1962 | Benchmark Product 1953 | Furniture             |     6
+  115 | Benchmark Product 0106 | Benchmark Category 01 |     7
+  315 | Benchmark Product 0306 | Benchmark Category 01 |     7
+  515 | Benchmark Product 0506 | Benchmark Category 01 |     7
+  715 | Benchmark Product 0706 | Benchmark Category 01 |     7
+  915 | Benchmark Product 0906 | Benchmark Category 01 |     7
+ 1115 | Benchmark Product 1106 | Benchmark Category 01 |     7
+ 1315 | Benchmark Product 1306 | Benchmark Category 01 |     7
+ 1515 | Benchmark Product 1506 | Benchmark Category 01 |     7
+ 1715 | Benchmark Product 1706 | Benchmark Category 01 |     7
+ 1915 | Benchmark Product 1906 | Benchmark Category 01 |     7
+   68 | Benchmark Product 0059 | Benchmark Category 04 |     8
+  268 | Benchmark Product 0259 | Benchmark Category 04 |     8
+  468 | Benchmark Product 0459 | Benchmark Category 04 |     8
+  668 | Benchmark Product 0659 | Benchmark Category 04 |     8
+  868 | Benchmark Product 0859 | Benchmark Category 04 |     8
+ 1068 | Benchmark Product 1059 | Benchmark Category 04 |     8
+ 1268 | Benchmark Product 1259 | Benchmark Category 04 |     8
+ 1468 | Benchmark Product 1459 | Benchmark Category 04 |     8
+ 1668 | Benchmark Product 1659 | Benchmark Category 04 |     8
+ 1868 | Benchmark Product 1859 | Benchmark Category 04 |     8
+    5 | Office Chair           | Furniture             |     8
+   21 | Benchmark Product 0012 | Benchmark Category 07 |     9
+  221 | Benchmark Product 0212 | Benchmark Category 07 |     9
+  421 | Benchmark Product 0412 | Benchmark Category 07 |     9
+  621 | Benchmark Product 0612 | Benchmark Category 07 |     9
+  821 | Benchmark Product 0812 | Benchmark Category 07 |     9
+ 1021 | Benchmark Product 1012 | Benchmark Category 07 |     9
+ 1221 | Benchmark Product 1212 | Benchmark Category 07 |     9
+ 1421 | Benchmark Product 1412 | Benchmark Category 07 |     9
+ 1621 | Benchmark Product 1612 | Benchmark Category 07 |     9
+ 1821 | Benchmark Product 1812 | Benchmark Category 07 |     9
+  174 | Benchmark Product 0165 | Benchmark Category 10 |    10
+  374 | Benchmark Product 0365 | Benchmark Category 10 |    10
+  574 | Benchmark Product 0565 | Benchmark Category 10 |    10
+  774 | Benchmark Product 0765 | Benchmark Category 10 |    10
+  974 | Benchmark Product 0965 | Benchmark Category 10 |    10
+ 1174 | Benchmark Product 1165 | Benchmark Category 10 |    10
+ 1374 | Benchmark Product 1365 | Benchmark Category 10 |    10
+ 1574 | Benchmark Product 1565 | Benchmark Category 10 |    10
+ 1774 | Benchmark Product 1765 | Benchmark Category 10 |    10
+ 1974 | Benchmark Product 1965 | Benchmark Category 10 |    10
+    6 | Office Desk            | Furniture             |    10
+  127 | Benchmark Product 0118 | Benchmark Category 13 |    11
+  327 | Benchmark Product 0318 | Benchmark Category 13 |    11
+  527 | Benchmark Product 0518 | Benchmark Category 13 |    11
+  727 | Benchmark Product 0718 | Benchmark Category 13 |    11
+  927 | Benchmark Product 0918 | Benchmark Category 13 |    11
+ 1127 | Benchmark Product 1118 | Benchmark Category 13 |    11
+ 1327 | Benchmark Product 1318 | Benchmark Category 13 |    11
+ 1527 | Benchmark Product 1518 | Benchmark Category 13 |    11
+ 1727 | Benchmark Product 1718 | Benchmark Category 13 |    11
+ 1927 | Benchmark Product 1918 | Benchmark Category 13 |    11
+   80 | Benchmark Product 0071 | Benchmark Category 16 |    12
+  280 | Benchmark Product 0271 | Benchmark Category 16 |    12
+  480 | Benchmark Product 0471 | Benchmark Category 16 |    12
+  680 | Benchmark Product 0671 | Benchmark Category 16 |    12
+  880 | Benchmark Product 0871 | Benchmark Category 16 |    12
+ 1080 | Benchmark Product 1071 | Benchmark Category 16 |    12
+ 1280 | Benchmark Product 1271 | Benchmark Category 16 |    12
+ 1480 | Benchmark Product 1471 | Benchmark Category 16 |    12
+ 1680 | Benchmark Product 1671 | Benchmark Category 16 |    12
+ 1880 | Benchmark Product 1871 | Benchmark Category 16 |    12
+    3 | LED Monitor            | Electronics           |    12
+   33 | Benchmark Product 0024 | Benchmark Category 19 |    13
+  233 | Benchmark Product 0224 | Benchmark Category 19 |    13
+  433 | Benchmark Product 0424 | Benchmark Category 19 |    13
+  633 | Benchmark Product 0624 | Benchmark Category 19 |    13
+  833 | Benchmark Product 0824 | Benchmark Category 19 |    13
+ 1033 | Benchmark Product 1024 | Benchmark Category 19 |    13
+ 1233 | Benchmark Product 1224 | Benchmark Category 19 |    13
+ 1433 | Benchmark Product 1424 | Benchmark Category 19 |    13
+ 1633 | Benchmark Product 1624 | Benchmark Category 19 |    13
+ 1833 | Benchmark Product 1824 | Benchmark Category 19 |    13
+  186 | Benchmark Product 0177 | Computing Accessories |    14
+  386 | Benchmark Product 0377 | Computing Accessories |    14
+  586 | Benchmark Product 0577 | Computing Accessories |    14
+  786 | Benchmark Product 0777 | Computing Accessories |    14
+  986 | Benchmark Product 0977 | Computing Accessories |    14
+ 1186 | Benchmark Product 1177 | Computing Accessories |    14
+ 1386 | Benchmark Product 1377 | Computing Accessories |    14
+ 1586 | Benchmark Product 1577 | Computing Accessories |    14
+ 1786 | Benchmark Product 1777 | Computing Accessories |    14
+ 1986 | Benchmark Product 1977 | Computing Accessories |    14
+  139 | Benchmark Product 0130 | Audio                 |    15
+  339 | Benchmark Product 0330 | Audio                 |    15
+  539 | Benchmark Product 0530 | Audio                 |    15
+  739 | Benchmark Product 0730 | Audio                 |    15
+  939 | Benchmark Product 0930 | Audio                 |    15
+ 1139 | Benchmark Product 1130 | Audio                 |    15
+ 1339 | Benchmark Product 1330 | Audio                 |    15
+ 1539 | Benchmark Product 1530 | Audio                 |    15
+ 1739 | Benchmark Product 1730 | Audio                 |    15
+ 1939 | Benchmark Product 1930 | Audio                 |    15
+(113 rows)
+
+-- QUERY 5: Top 10 customers by completed order value
+SELECT
+    c.id AS customer_id,
+    c.name AS customer_name,
+    COUNT(o.id) AS completed_orders,
+    SUM(o.total) AS total_spending
+FROM customers c
+JOIN orders o ON o.customer_id = c.id
+WHERE o.status IN ('confirmed', 'shipped', 'delivered')
+GROUP BY c.id, c.name
+ORDER BY total_spending DESC
+LIMIT 10;
+ customer_id |      customer_name      | completed_orders | total_spending 
+-------------+-------------------------+------------------+----------------
+         763 | Benchmark Customer 0758 |               20 |    11346945.00
+          44 | Benchmark Customer 0039 |               20 |    11343555.00
+         618 | Benchmark Customer 0613 |               20 |    11343555.00
+         761 | Benchmark Customer 0756 |               20 |    11276425.00
+         904 | Benchmark Customer 0899 |               20 |    11199705.00
+         189 | Benchmark Customer 0184 |               20 |    11168125.00
+         473 | Benchmark Customer 0468 |               20 |    11132575.00
+         616 | Benchmark Customer 0611 |               20 |    11055855.00
+         188 | Benchmark Customer 0183 |               20 |    11029315.00
+         759 | Benchmark Customer 0754 |               20 |    10969545.00
+(10 rows)
+
+-- QUERY 6: Payment status analysis
+SELECT
+    status,
+    COUNT(*) AS payment_count,
+    SUM(amount) AS total_amount,
+    AVG(amount) AS average_amount
+FROM payments
+GROUP BY status
+ORDER BY payment_count DESC;
+   status   | payment_count | total_amount  |   average_amount    
+------------+---------------+---------------+---------------------
+ successful |         16004 | 5679441614.00 | 354876.381779555111
+ pending    |          4001 | 1420218662.00 | 354965.924018995251
+(2 rows)
+

@@ -11,7 +11,7 @@ Checked on 12 November 2026.
 | Portfolio | Marks | Status |
 |---|---:|---|
 | 1. Database design and modelling | 7 | Done. Schema, seed, rendered ER diagram, write-ups, and run steps are in the folder. |
-| 2. Query processing and optimisation | 7 | In progress. Six queries and one index experiment are done. A second experiment and saved query results are still open. |
+| 2. Query processing and optimisation | 7 | Done. Six queries, three index experiments, saved plans, and saved result rows are in the folder. |
 | 3. Transactions and concurrency | 7 | Not started. |
 | 4. NoSQL and advanced data models | 7 | Not started. |
 | 5. Distributed and cloud databases | 6 | Not started. The primary and replica idea is named in the case study only. |
@@ -19,12 +19,11 @@ Checked on 12 November 2026.
 
 ## Working order
 
-1. Portfolio 1 is closed. Close the open Portfolio 2 tasks, including the push of local commits.
-2. Finish the second query experiment in Portfolio 2.
-3. Portfolio 3: commit, rollback, and the two-session stock test.
-4. Portfolio 4: MongoDB customer order history.
-5. Portfolio 5: primary and read replica for ShopFlow.
-6. The 2–3 page LMS summary, reflection, references, and AI-use declaration.
+1. Portfolio 1 and Portfolio 2 are closed. Push the local commits that are not on origin yet.
+2. Portfolio 3: commit, rollback, and the two-session stock test.
+3. Portfolio 4: MongoDB customer order history.
+4. Portfolio 5: primary and read replica for ShopFlow.
+5. The 2–3 page LMS summary, reflection, references, and AI-use declaration.
 
 ## Working approach
 
@@ -81,16 +80,11 @@ These sit outside a single portfolio and affect the whole submission.
 - [x] Benchmark load: 1,000 extra customers, 20 categories, 2,000 products, 20,000 orders, and three lines per generated order.
 - [x] Timestamp and benchmark payment script.
 - [x] Experiment 1, customer 500 order history sorted by `orders.id`. Baseline sequential scan 4.090 ms, saved in `baseline.md`. After `idx_orders_customer_id_id_desc`, bitmap heap scan 2.273 ms. The sort stayed because a bitmap scan does not keep index order. Plan screenshots are in the folder.
-
-**Still to do**
-
-- [ ] Move the `(customer_id, created_at DESC)` index write-up into `Experiment2.md`. That file currently repeats Experiment 1. The 0.895 ms result is an extra section at the bottom of `Experiment1.md`.
-- [ ] Save the before and after `EXPLAIN (ANALYZE, BUFFERS)` text for the `created_at` index next to the screenshots.
-- [ ] Leave the `enable_bitmapscan = off` run out of the improvement table. That plan used an ordered index scan and took 95.582 ms, which is slower than the bitmap plan.
-- [ ] Add `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_indexes.sql` with the `CREATE INDEX` statements and `ANALYZE`. The statements currently live only inside the experiment notes.
-- [ ] Run a second optimisation on Query 2, top 10 products. The baseline is in `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_bitmapscan_off_and_query2_baseline.png`: sequential scans of about 60,009 order items and 2,009 products, hash aggregate, 58.062 ms. Test an index on `order_items (product_id)`. Save the before and after plans, and describe the access method and buffer counts as well as the time.
-- [ ] Save the result rows for all six queries, not only the plans.
-- [ ] Replace the placeholder part of the README with the run order: schema, seed, benchmark script, timestamp script, indexes, then the six queries. Keep the assumptions.
+- [x] Experiment 2 in `Experiment2.md`. Saved plans: `Experiment2_before.txt` (6.722 ms) and `Experiment2_after.txt` (0.879 ms). The earlier capture of the same plan shapes was 2.565 ms then 0.895 ms. The 95.582 ms ordered index scan is left out of the comparison table.
+- [x] `indexes.sql` with the three `CREATE INDEX` statements and `ANALYZE`.
+- [x] Experiment 3, Query 2. `idx_order_items_product_id` did not change the sequential scans. Before file 92.564 ms, after file 31.001 ms, same access method and the same scan buffer counts. The screenshot baseline was 58.062 ms.
+- [x] Result rows for all six queries in `Sipe_Olaoluwa_301911387_Portfolio2_QueryOptimisation_query_results.txt`.
+- [x] Portfolio 2 README run order: schema, seed, benchmark script, timestamp script, indexes, then the six queries.
 
 ## Portfolio 3 — Transactions and concurrency (7 marks)
 

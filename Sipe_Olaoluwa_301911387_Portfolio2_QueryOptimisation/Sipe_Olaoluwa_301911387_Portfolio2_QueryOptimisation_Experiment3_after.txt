@@ -1,0 +1,28 @@
+                                                                 QUERY PLAN                                                                 
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=2143.79..2143.81 rows=10 width=70) (actual time=30.824..30.828 rows=10 loops=1)
+   Buffers: shared hit=525
+   ->  Sort  (cost=2143.79..2148.81 rows=2009 width=70) (actual time=30.823..30.825 rows=10 loops=1)
+         Sort Key: (sum(oi.quantity)) DESC
+         Sort Method: top-N heapsort  Memory: 26kB
+         Buffers: shared hit=525
+         ->  HashAggregate  (cost=2075.26..2100.37 rows=2009 width=70) (actual time=30.449..30.640 rows=867 loops=1)
+               Group Key: p.id
+               Batches: 1  Memory Usage: 625kB
+               Buffers: shared hit=522
+               ->  Hash Join  (cost=66.20..1325.15 rows=60009 width=40) (actual time=0.382..16.079 rows=60009 loops=1)
+                     Hash Cond: (oi.product_id = p.id)
+                     Buffers: shared hit=522
+                     ->  Seq Scan on order_items oi  (cost=0.00..1101.09 rows=60009 width=18) (actual time=0.006..4.207 rows=60009 loops=1)
+                           Buffers: shared hit=501
+                     ->  Hash  (cost=41.09..41.09 rows=2009 width=30) (actual time=0.366..0.367 rows=2009 loops=1)
+                           Buckets: 2048  Batches: 1  Memory Usage: 140kB
+                           Buffers: shared hit=21
+                           ->  Seq Scan on products p  (cost=0.00..41.09 rows=2009 width=30) (actual time=0.009..0.165 rows=2009 loops=1)
+                                 Buffers: shared hit=21
+ Planning:
+   Buffers: shared hit=163 read=4
+ Planning Time: 0.940 ms
+ Execution Time: 31.001 ms
+(24 rows)
+
