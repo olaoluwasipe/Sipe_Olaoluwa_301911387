@@ -1,0 +1,73 @@
+=== One customer's history: Alice Johnson ===
+{
+  customerId: 1,
+  name: 'Alice Johnson',
+  email: 'alice@example.com',
+  orders: [
+    {
+      orderId: 1,
+      status: 'confirmed',
+      total: 32000,
+      createdAt: ISODate('2026-11-11T06:08:25.643Z'),
+      items: [
+        {
+          productId: 1,
+          productName: 'Wireless Mouse',
+          quantity: 2,
+          price: 8500
+        },
+        {
+          productId: 2,
+          productName: 'Mechanical Keyboard',
+          quantity: 1,
+          price: 15000
+        }
+      ]
+    },
+    {
+      orderId: 20006,
+      status: 'confirmed',
+      total: 2400,
+      createdAt: ISODate('2026-11-12T08:38:15.671Z'),
+      items: [
+        {
+          productId: 7,
+          productName: 'Notebook',
+          quantity: 2,
+          price: 1200
+        }
+      ]
+    }
+  ]
+}
+=== Orders filtered by status: confirmed ===
+{
+  customer: 'Alice Johnson',
+  orderId: 1,
+  status: 'confirmed',
+  total: 32000,
+  createdAt: ISODate('2026-11-11T06:08:25.643Z')
+}
+{
+  customer: 'David Williams',
+  orderId: 4,
+  status: 'confirmed',
+  total: 11000,
+  createdAt: ISODate('2026-11-08T03:08:25.643Z')
+}
+{
+  customer: 'Alice Johnson',
+  orderId: 20006,
+  status: 'confirmed',
+  total: 2400,
+  createdAt: ISODate('2026-11-12T08:38:15.671Z')
+}
+=== Total of stored order totals for Alice Johnson ===
+{
+  _id: {
+    name: 'Alice Johnson',
+    email: 'alice@example.com'
+  },
+  orderCount: 2,
+  totalSpend: 34400
+}

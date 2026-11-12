@@ -13,16 +13,15 @@ Checked on 12 November 2026.
 | 1. Database design and modelling | 7 | Done. Schema, seed, rendered ER diagram, write-ups, and run steps are in the folder. |
 | 2. Query processing and optimisation | 7 | Done. Six queries, three index experiments, saved plans, and saved result rows are in the folder. |
 | 3. Transactions and concurrency | 7 | Done. A committed order, a rolled-back order, a lost update, and a row-lock run are saved. |
-| 4. NoSQL and advanced data models | 7 | Not started. |
+| 4. NoSQL and advanced data models | 7 | Done. MongoDB holds five customer history documents. Query output is saved. |
 | 5. Distributed and cloud databases | 6 | Not started. The primary and replica idea is named in the case study only. |
 | Final documentation | 6 | Not started. The case study and this plan exist. The LMS summary does not. |
 
 ## Working order
 
-1. Portfolios 1 to 3 are closed. Push the local commits that are not on origin yet.
-2. Portfolio 4: MongoDB customer order history.
-3. Portfolio 5: primary and read replica for ShopFlow.
-4. The 2–3 page LMS summary, reflection, references, and AI-use declaration.
+1. Portfolios 1 to 4 are closed. Push the local commits that are not on origin yet.
+2. Portfolio 5: primary and read replica for ShopFlow.
+3. The 2–3 page LMS summary, reflection, references, and AI-use declaration.
 
 ## Working approach
 
@@ -106,15 +105,14 @@ Use the same ShopFlow tables. `orders.total` must be updated in the same transac
 
 MongoDB holds customer order history only. It does not replace PostgreSQL and it does not copy every table.
 
-**Still to do**
+**Done**
 
-- [ ] Add a MongoDB service to `Sipe_Olaoluwa_301911387_Portfolio1_DatabaseDesign_compose.yml`.
-- [ ] `Sipe_Olaoluwa_301911387_Portfolio4_NoSQL_model.md`. One customer document with orders and line items embedded. Say which ShopFlow fields are copied and which stay relational.
-- [ ] `Sipe_Olaoluwa_301911387_Portfolio4_NoSQL_seed.js` with a few customer documents taken from the sample shop data.
-- [ ] `Sipe_Olaoluwa_301911387_Portfolio4_NoSQL_queries.js`: one customer's history, orders filtered by status, and total spend for a customer.
-- [ ] Save the query output.
-- [ ] Short suitability note in the model file: history reads fit a document; stock checks and payments stay in PostgreSQL because they need transactions.
-- [ ] README: how to start MongoDB and run the queries.
+- [x] MongoDB 7 service added to `Sipe_Olaoluwa_301911387_Portfolio1_DatabaseDesign_compose.yml`, port 27017.
+- [x] `model.md`. One customer document with orders and line items embedded. Copied fields and relational fields are listed. History reads fit a document. Stock checks and payments stay in PostgreSQL because they need transactions.
+- [x] `seed.js` with the five sample customers, orders 1 to 5, and Alice's order 20006.
+- [x] `queries.js`: Alice's history, confirmed orders, and the sum of Alice's stored order totals.
+- [x] Query output saved. Confirmed orders are 1, 4, and 20006. Alice's total is 34400.
+- [x] README: how to start MongoDB and run the queries.
 
 ## Portfolio 5 — Distributed and cloud databases (6 marks)
 

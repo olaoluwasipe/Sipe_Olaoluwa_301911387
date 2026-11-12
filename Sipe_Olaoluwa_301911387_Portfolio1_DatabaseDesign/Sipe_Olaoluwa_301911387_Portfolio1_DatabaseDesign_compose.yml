@@ -21,5 +21,17 @@ services:
       timeout: 5s
       retries: 5
 
+  shopflow-mongo:
+    image: mongo:7
+    container_name: shopflow-mongo
+    restart: unless-stopped
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - shopflow_mongo_data:/data/db
+
 volumes:
   shopflow_postgres_data:
+  shopflow_mongo_data:
